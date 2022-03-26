@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct PaintShape: Shape {
-    let points: [CGPoint]
     let engine = PaintEngine()
+    let points: [CGPoint]
+    
     func path(in rect: CGRect) -> Path {
         engine.createPath(for: points)
     }
