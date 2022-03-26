@@ -49,6 +49,7 @@ struct PaintCanvasView: View {
     @State private var selectedColor: Color = .black
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
+    @State private var showingAlert = false
     
     let paintEngine = PaintEngine()
 
@@ -133,21 +134,15 @@ struct PaintCanvasView: View {
             .navigationTitle("Paint Minimal")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Menu {
-                    Button{
-                        let image = convertViewToUIImage(PhotoCanvas(drawingLines: $lines))
-                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                    } label: {
-                        Label("Сохранить", systemImage: "square.and.arrow.down")
-                    }
-                    Button {
-                        
-                    } label: {
-                        Label("Поделиться", systemImage: "square.and.arrow.up")
-                    }
+                Button {
+                    let image = convertViewToUIImage(PhotoCanvas(drawingLines: $lines))
+                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                    showingAlert = true
                 } label: {
-                    Image(systemName: "ellipsis.circle")
-                        .imageScale(.large)
+                    Label("Сохранить", systemImage: "square.and.arrow.down")
+                }
+                .alert(isPresented: $showingAlert) {
+                    Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
                 }
             }
         }
@@ -155,7 +150,7 @@ struct PaintCanvasView: View {
 }
 
 func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
-    var uiImage = UIImage(systemName: "exclamationmark.triangle.fill")!
+    var uiImage = UIImage()
     let controller = UIHostingController(rootView: canvasView)
            
     if let view = controller.view {
@@ -169,10 +164,6 @@ func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
         }
     }
     return uiImage
-}
-
-func shareCanvas() {
-    print("Shared Canvas")
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
