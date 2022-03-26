@@ -28,6 +28,8 @@ struct PaintCanvasView: View {
                 Text(String(format: "%.0f", selectedLineWidth))
                     .fontWeight(.medium)
                 
+                Spacer()
+                
                 Button {
                     let last = lines.removeLast()
                     deletedLines.append(last)
@@ -61,7 +63,8 @@ struct PaintCanvasView: View {
                         secondaryButton: .cancel(Text("Отменить"))
                     )
                 }
-            }.padding()
+            }
+            .padding()
 
             ZStack {
                 Color.white
@@ -73,6 +76,7 @@ struct PaintCanvasView: View {
             }
             .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
                 let newPoint = value.location
+                
                 if value.translation.width + value.translation.height == 0 {
                     lines.append(PaintLine(points: [newPoint], color: selectedColor, lineWidth: selectedLineWidth))
                 } else {
@@ -93,5 +97,8 @@ struct PaintCanvasView: View {
 struct PaintCanvasView_Previews: PreviewProvider {
     static var previews: some View {
         PaintCanvasView()
+            .preferredColorScheme(.light)
+        PaintCanvasView()
+            .preferredColorScheme(.dark)
     }
 }
