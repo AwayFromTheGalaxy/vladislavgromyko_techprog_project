@@ -7,17 +7,38 @@
 
 import SwiftUI
 
-struct DrawingCanvas: View {
+struct PhotoCanvas: View {
     @Binding var drawingLines: [PaintLine]
+    
+    @Environment(\.colorScheme) var deviceColorScheme: ColorScheme
     
     let paintEngine = PaintEngine()
     
     var body: some View {
-        Canvas { context, size in
-            for line in drawingLines {
-                let path = paintEngine.createPath(for: line.points)
-                context.stroke(path, with: .color(line.color), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
-            }
+        if deviceColorScheme == .dark {
+            Color.black
+                .frame(width: 400, height: 650, alignment: .center)
+                .overlay(
+                    Canvas { context, size in
+                        for line in drawingLines {
+                            let path = paintEngine.createPath(for: line.points)
+                            context.stroke(path, with: .color(line.color), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+                        }
+                    }
+                )
+                .edgesIgnoringSafeArea(.all)
+        } else {
+            Color.white
+                .frame(width: 400, height: 650, alignment: .center)
+                .overlay(
+                    Canvas { context, size in
+                        for line in drawingLines {
+                            let path = paintEngine.createPath(for: line.points)
+                            context.stroke(path, with: .color(line.color), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+                        }
+                    }
+                )
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
@@ -28,11 +49,18 @@ struct PaintCanvasView: View {
     @State private var selectedColor: Color = .black
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
+    
+    let paintEngine = PaintEngine()
 
     var body: some View {
         NavigationView {
             VStack {
-                DrawingCanvas(drawingLines: $lines)
+                Canvas { context, size in
+                    for line in lines {
+                        let path = paintEngine.createPath(for: line.points)
+                        context.stroke(path, with: .color(line.color), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+                    }
+                }
                 .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged({ value in
                         let newPoint = value.location
@@ -106,10 +134,15 @@ struct PaintCanvasView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Menu {
-                    Button(action: saveCanvas) {
+                    Button{
+                        let image = convertViewToUIImage(PhotoCanvas(drawingLines: $lines))
+                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                    } label: {
                         Label("Сохранить", systemImage: "square.and.arrow.down")
                     }
-                    Button(action: shareCanvas) {
+                    Button {
+                        
+                    } label: {
                         Label("Поделиться", systemImage: "square.and.arrow.up")
                     }
                 } label: {
@@ -121,8 +154,21 @@ struct PaintCanvasView: View {
     }
 }
 
-func saveCanvas() {
-    print("Saved Canvas")
+func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
+    var uiImage = UIImage(systemName: "exclamationmark.triangle.fill")!
+    let controller = UIHostingController(rootView: canvasView)
+           
+    if let view = controller.view {
+        let contentSize = view.intrinsicContentSize
+        view.bounds = CGRect(origin: .zero, size: contentSize)
+        view.backgroundColor = .clear
+
+        let renderer = UIGraphicsImageRenderer(size: contentSize)
+        uiImage = renderer.image { _ in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
+    }
+    return uiImage
 }
 
 func shareCanvas() {
