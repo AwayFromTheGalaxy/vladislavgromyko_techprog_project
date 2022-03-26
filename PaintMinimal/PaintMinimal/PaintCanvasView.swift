@@ -7,6 +7,21 @@
 
 import SwiftUI
 
+struct DrawingCanvas: View {
+    @Binding var drawingLines: [PaintLine]
+    
+    let paintEngine = PaintEngine()
+    
+    var body: some View {
+        Canvas { context, size in
+            for line in drawingLines {
+                let path = paintEngine.createPath(for: line.points)
+                context.stroke(path, with: .color(line.color), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+            }
+        }
+    }
+}
+
 struct PaintCanvasView: View {
     @State private var lines = [PaintLine]()
     @State private var deletedLines = [PaintLine]()
@@ -14,17 +29,10 @@ struct PaintCanvasView: View {
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
 
-    let paintEngine = PaintEngine()
-
     var body: some View {
         NavigationView {
             VStack {
-                Canvas { context, size in
-                    for line in lines {
-                        let path = paintEngine.createPath(for: line.points)
-                        context.stroke(path, with: .color(line.color), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
-                    }
-                   }
+                DrawingCanvas(drawingLines: $lines)
                 .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged({ value in
                         let newPoint = value.location
