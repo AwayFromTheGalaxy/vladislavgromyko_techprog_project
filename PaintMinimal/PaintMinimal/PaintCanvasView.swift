@@ -13,11 +13,12 @@ struct PhotoCanvas: View {
     @Environment(\.colorScheme) var deviceColorScheme: ColorScheme
     
     let paintEngine = PaintEngine()
+    let screenSize: CGRect = UIScreen.main.bounds
     
     var body: some View {
         if deviceColorScheme == .dark {
             Color.black
-                .frame(width: 400, height: 650, alignment: .center)
+                .frame(width: screenSize.width, height: screenSize.height / 1.25, alignment: .center)
                 .overlay(
                     Canvas { context, size in
                         for line in drawingLines {
@@ -29,7 +30,7 @@ struct PhotoCanvas: View {
                 .edgesIgnoringSafeArea(.all)
         } else {
             Color.white
-                .frame(width: 400, height: 650, alignment: .center)
+                .frame(width: screenSize.width, height: screenSize.height / 1.25, alignment: .center)
                 .overlay(
                     Canvas { context, size in
                         for line in drawingLines {
