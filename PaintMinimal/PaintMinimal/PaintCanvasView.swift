@@ -150,7 +150,7 @@ struct PaintCanvasView: View {
 }
 
 func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
-    var uiImage = UIImage(systemName: "exclamationmark.triangle.fill")!
+    var uiImage = UIImage()
     let controller = UIHostingController(rootView: canvasView)
            
     if let view = controller.view {
