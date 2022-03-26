@@ -14,84 +14,123 @@ struct PaintCanvasView: View {
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
     
+    @Environment(\.colorScheme) private var colorScheme: ColorScheme
+    
     let paintEngine = PaintEngine()
 
     var body: some View {
-        VStack {
-            HStack {
-                ColorPicker("Color Palette", selection: $selectedColor)
-                    .labelsHidden()
-                Slider(value: $selectedLineWidth, in: 1...20) {
-                    Text("linewidth")
+        NavigationView {
+            VStack {
+                ZStack {
+                    if (colorScheme == .dark) {
+                        Color.black
+                    } else {
+                        Color.white
+                    }
+
+                    ForEach(lines){ line in
+                        PaintShape(points: line.points)
+                            .stroke(line.color, style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+                    }
                 }
-                    .frame(maxWidth: 100)
-                Text(String(format: "%.0f", selectedLineWidth))
-                    .fontWeight(.medium)
+                .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                    .onChanged({ value in
+                        let newPoint = value.location
+                    
+                        if value.translation.width + value.translation.height == 0 {
+                            lines.append(PaintLine(points: [newPoint], color: selectedColor, lineWidth: selectedLineWidth))
+                        } else {
+                            let index = lines.count - 1
+                            lines[index].points.append(newPoint)
+                        }
+                    
+                    })
+                    .onEnded({ value in
+                        if let last = lines.last?.points, last.isEmpty {
+                            lines.removeLast()
+                        }
+                    })
+                )
                 
-                Spacer()
+                HStack {
+                    ColorPicker("Выбор цвета", selection: $selectedColor)
+                        .labelsHidden()
+                    Slider(value: $selectedLineWidth, in: 1...20) {
+                        Text("linewidth")
+                    }
+                        .frame(maxWidth: 100)
+                    Text(String(format: "%.0f", selectedLineWidth))
+                        .fontWeight(.medium)
+                    
+                    Spacer()
+                    
+                    Button {
+                        let last = lines.removeLast()
+                        deletedLines.append(last)
+                    } label: {
+                        Image(systemName: "arrow.uturn.backward.circle")
+                            .imageScale(.large)
+                    }
+                    .disabled(lines.count == 0)
+                    
+                    Button {
+                        let last = deletedLines.removeLast()
+                        lines.append(last)
+                    } label: {
+                        Image(systemName: "arrow.uturn.forward.circle")
+                            .imageScale(.large)
+                    }
+                    .disabled(deletedLines.count == 0)
+                    
+                    Button {
+                        clearConfirmationState = true
+                    }
+                    label: {
+                        Image(systemName: "trash")
+                            .imageScale(.large)
+                    }
+                    .foregroundColor(.red)
+                    .alert(isPresented: $clearConfirmationState) {
+                        Alert(
+                            title: Text("Вы действительно хотите очистить поле?"),
+                            message: Text("Это действие нельзя будет отменить"),
+                            primaryButton: .destructive(Text("Очистить")) {
+                                lines = [PaintLine]()
+                                deletedLines = [PaintLine]()
+                            },
+                            secondaryButton: .cancel(Text("Отменить"))
+                        )
+                    }
+                }
                 
-                Button {
-                    let last = lines.removeLast()
-                    deletedLines.append(last)
-                } label: {
-                    Image(systemName: "arrow.uturn.backward.circle")
-                        .imageScale(.large)
-                }
-                .disabled(lines.count == 0)
-                
-                Button {
-                    let last = deletedLines.removeLast()
-                    lines.append(last)
-                } label: {
-                    Image(systemName: "arrow.uturn.forward.circle")
-                        .imageScale(.large)
-                }
-                .disabled(deletedLines.count == 0)
-                
-                Button("Очистить") {
-                    clearConfirmationState = true
-                }
-                .foregroundColor(.red)
-                .alert(isPresented: $clearConfirmationState) {
-                    Alert(
-                        title: Text("Вы действительно хотите очистить поле?"),
-                        message: Text("Это действие нельзя будет отменить"),
-                        primaryButton: .destructive(Text("Очистить")) {
-                            lines = [PaintLine]()
-                            deletedLines = [PaintLine]()
-                        },
-                        secondaryButton: .cancel(Text("Отменить"))
-                    )
-                }
             }
             .padding()
 
-            ZStack {
-                Color.white
-
-                ForEach(lines){ line in
-                    PaintShape(points: line.points)
-                        .stroke(line.color, style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+            .navigationTitle("Paint Minimal")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                Menu {
+                    Button(action: saveCanvas) {
+                        Label("Сохранить", systemImage: "square.and.arrow.down")
+                    }
+                    Button(action: shareCanvas) {
+                        Label("Поделиться", systemImage: "square.and.arrow.up")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .imageScale(.large)
                 }
             }
-            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                let newPoint = value.location
-                
-                if value.translation.width + value.translation.height == 0 {
-                    lines.append(PaintLine(points: [newPoint], color: selectedColor, lineWidth: selectedLineWidth))
-                } else {
-                    let index = lines.count - 1
-                    lines[index].points.append(newPoint)
-                }
-                
-            }).onEnded({ value in
-                if let last = lines.last?.points, last.isEmpty {
-                    lines.removeLast()
-                }
-            })
-            )
         }
     }
+}
+
+func saveCanvas() {
+    print("Saved Canvas")
+}
+
+func shareCanvas() {
+    print("Shared Canvas")
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
