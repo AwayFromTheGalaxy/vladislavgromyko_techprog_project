@@ -14,6 +14,8 @@ struct PaintCanvasView: View {
     @State private var selectedColor: Color = .black
     @State private var selectedLineWidth: CGFloat = 1
     
+    @State private var clearConfirmationState: Bool = false
+    
     let paintEngine = PaintEngine()
 
     var body: some View {
@@ -42,6 +44,22 @@ struct PaintCanvasView: View {
                     Image(systemName: "arrow.uturn.forward.circle")
                         .imageScale(.large)
                 }.disabled(deletedLines.count == 0)
+                
+                Button("Очистить") {
+                    clearConfirmationState = true
+                }
+                .foregroundColor(.red)
+                .alert(isPresented: $clearConfirmationState) {
+                    Alert(
+                        title: Text("Вы действительно хотите очистить поле?"),
+                        message: Text("Это действие нельзя будет отменить"),
+                        primaryButton: .destructive(Text("Очистить")) {
+                            lines = [PaintLine]()
+                            deletedLines = [PaintLine]()
+                        },
+                        secondaryButton: .cancel(Text("Отменить"))
+                    )
+                }
             }.padding()
 
             ZStack {
