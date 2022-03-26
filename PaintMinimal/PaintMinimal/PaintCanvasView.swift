@@ -134,16 +134,11 @@ struct PaintCanvasView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Menu {
-                    Button{
+                    Button {
                         let image = convertViewToUIImage(PhotoCanvas(drawingLines: $lines))
                         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     } label: {
                         Label("Сохранить", systemImage: "square.and.arrow.down")
-                    }
-                    Button {
-                        
-                    } label: {
-                        Label("Поделиться", systemImage: "square.and.arrow.up")
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -169,10 +164,6 @@ func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
         }
     }
     return uiImage
-}
-
-func shareCanvas() {
-    print("Shared Canvas")
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
