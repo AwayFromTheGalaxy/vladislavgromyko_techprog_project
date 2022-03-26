@@ -9,9 +9,15 @@ import SwiftUI
 
 struct PaintCanvasView: View {
     @State private var lines = [PaintLine]()
+    @State private var selectedColor: Color = .black
 
     var body: some View {
         VStack {
+            HStack {
+                ColorPicker("Color Palette", selection: $selectedColor)
+                    .labelsHidden()
+            }.padding()
+
             ZStack {
                 Color.white
 
