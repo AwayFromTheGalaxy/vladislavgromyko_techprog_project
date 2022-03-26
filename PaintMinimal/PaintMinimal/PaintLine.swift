@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct PaintLine: Identifiable {
-    var points: [CGPoint]
-    var color: Color
-    var lineWidth: CGFloat
     let id = UUID()
+    var color: Color
+    var points: [CGPoint]
+    var lineWidth: CGFloat
 }
