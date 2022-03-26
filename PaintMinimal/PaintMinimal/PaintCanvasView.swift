@@ -14,23 +14,17 @@ struct PaintCanvasView: View {
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
 
-    @Environment(\.colorScheme) private var colorScheme: ColorScheme
+    let paintEngine = PaintEngine()
 
     var body: some View {
         NavigationView {
             VStack {
-                ZStack {
-                    if (colorScheme == .dark) {
-                        Color.black
-                    } else {
-                        Color.white
+                Canvas { context, size in
+                    for line in lines {
+                        let path = paintEngine.createPath(for: line.points)
+                        context.stroke(path, with: .color(line.color), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
                     }
-
-                    ForEach(lines){ line in
-                        PaintShape(points: line.points)
-                            .stroke(line.color, style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
-                    }
-                }
+                   }
                 .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged({ value in
                         let newPoint = value.location
@@ -41,7 +35,6 @@ struct PaintCanvasView: View {
                             let index = lines.count - 1
                             lines[index].points.append(newPoint)
                         }
-
                     })
                     .onEnded({ value in
                         if let last = lines.last?.points, last.isEmpty {
@@ -49,7 +42,6 @@ struct PaintCanvasView: View {
                         }
                     })
                 )
-
                 HStack {
                     ColorPicker("Выбор цвета", selection: $selectedColor)
                         .labelsHidden()
@@ -57,7 +49,7 @@ struct PaintCanvasView: View {
                         Text("linewidth")
                     }
                         .frame(maxWidth: 100)
-                    Text(String(format: "%.0f", selectedLineWidth))
+                    Text(String(format: "Размер: %.0f", selectedLineWidth))
                         .fontWeight(.medium)
 
                     Spacer()
@@ -100,10 +92,8 @@ struct PaintCanvasView: View {
                         )
                     }
                 }
-
+                .padding([.leading, .bottom, .trailing], 16.0)
             }
-            .padding()
-
             .navigationTitle("Paint Minimal")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
