@@ -5,7 +5,6 @@
 //  Created by Владислав on 26.03.2022.
 //
 
-import Foundation
 import SwiftUI
 
 class PaintEngine {
