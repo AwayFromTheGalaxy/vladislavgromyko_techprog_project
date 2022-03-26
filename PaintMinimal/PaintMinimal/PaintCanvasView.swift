@@ -8,9 +8,19 @@
 import SwiftUI
 
 struct PaintCanvasView: View {
+    @State private var lines = [PaintLine]()
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        VStack {
+            ZStack {
+                Color.white
+
+                ForEach(lines){ line in
+                    PaintShape(points: line.points)
+                        .stroke(line.color, style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+                }
+            }
+        }
     }
 }
 
