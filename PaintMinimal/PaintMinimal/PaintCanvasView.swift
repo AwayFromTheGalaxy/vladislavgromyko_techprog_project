@@ -13,8 +13,6 @@ struct PaintCanvasView: View {
     @State private var selectedColor: Color = .black
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
-    
-    let paintEngine = PaintEngine()
 
     var body: some View {
         VStack {
