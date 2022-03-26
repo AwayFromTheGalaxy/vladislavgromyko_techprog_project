@@ -7,16 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D586E1727EF1356008A9FA1 /* PaintEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D586E1627EF1356008A9FA1 /* PaintEngine.swift */; };
+		1D586E1927EF1527008A9FA1 /* PaintLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D586E1827EF1527008A9FA1 /* PaintLine.swift */; };
+		1D586E1B27EF1548008A9FA1 /* PaintShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D586E1A27EF1548008A9FA1 /* PaintShape.swift */; };
 		1DD9769A27EF0CB3000478B8 /* PaintMinimalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD9769927EF0CB3000478B8 /* PaintMinimalApp.swift */; };
-		1DD9769C27EF0CB3000478B8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD9769B27EF0CB3000478B8 /* ContentView.swift */; };
+		1DD9769C27EF0CB3000478B8 /* PaintCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD9769B27EF0CB3000478B8 /* PaintCanvasView.swift */; };
 		1DD9769E27EF0CB4000478B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DD9769D27EF0CB4000478B8 /* Assets.xcassets */; };
 		1DD976A127EF0CB4000478B8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DD976A027EF0CB4000478B8 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1D586E1627EF1356008A9FA1 /* PaintEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintEngine.swift; sourceTree = "<group>"; };
+		1D586E1827EF1527008A9FA1 /* PaintLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintLine.swift; sourceTree = "<group>"; };
+		1D586E1A27EF1548008A9FA1 /* PaintShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintShape.swift; sourceTree = "<group>"; };
 		1DD9769627EF0CB3000478B8 /* PaintMinimal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintMinimal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DD9769927EF0CB3000478B8 /* PaintMinimalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintMinimalApp.swift; sourceTree = "<group>"; };
-		1DD9769B27EF0CB3000478B8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1DD9769B27EF0CB3000478B8 /* PaintCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintCanvasView.swift; sourceTree = "<group>"; };
 		1DD9769D27EF0CB4000478B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1DD976A027EF0CB4000478B8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,9 +58,12 @@
 			isa = PBXGroup;
 			children = (
 				1DD9769927EF0CB3000478B8 /* PaintMinimalApp.swift */,
-				1DD9769B27EF0CB3000478B8 /* ContentView.swift */,
+				1DD9769B27EF0CB3000478B8 /* PaintCanvasView.swift */,
 				1DD9769D27EF0CB4000478B8 /* Assets.xcassets */,
 				1DD9769F27EF0CB4000478B8 /* Preview Content */,
+				1D586E1627EF1356008A9FA1 /* PaintEngine.swift */,
+				1D586E1827EF1527008A9FA1 /* PaintLine.swift */,
+				1D586E1A27EF1548008A9FA1 /* PaintShape.swift */,
 			);
 			path = PaintMinimal;
 			sourceTree = "<group>";
@@ -137,8 +146,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1DD9769C27EF0CB3000478B8 /* ContentView.swift in Sources */,
+				1D586E1B27EF1548008A9FA1 /* PaintShape.swift in Sources */,
+				1DD9769C27EF0CB3000478B8 /* PaintCanvasView.swift in Sources */,
+				1D586E1927EF1527008A9FA1 /* PaintLine.swift in Sources */,
 				1DD9769A27EF0CB3000478B8 /* PaintMinimalApp.swift in Sources */,
+				1D586E1727EF1356008A9FA1 /* PaintEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

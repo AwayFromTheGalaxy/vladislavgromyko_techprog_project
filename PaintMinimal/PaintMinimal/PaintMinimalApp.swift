@@ -11,7 +11,7 @@ import SwiftUI
 struct PaintMinimalApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PaintCanvasView()
         }
     }
 }
