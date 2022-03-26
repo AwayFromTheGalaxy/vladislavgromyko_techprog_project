@@ -36,7 +36,7 @@ struct PaintCanvasView: View {
                         let newPoint = value.location
 
                         if value.translation.width + value.translation.height == 0 {
-                            lines.append(PaintLine(points: [newPoint], color: selectedColor, lineWidth: selectedLineWidth))
+                            lines.append(PaintLine(color: selectedColor, points: [newPoint], lineWidth: selectedLineWidth))
                         } else {
                             let index = lines.count - 1
                             lines[index].points.append(newPoint)
