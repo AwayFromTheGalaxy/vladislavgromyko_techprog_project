@@ -13,10 +13,8 @@ struct PaintCanvasView: View {
     @State private var selectedColor: Color = .black
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
-    
+
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
-    
-    let paintEngine = PaintEngine()
 
     var body: some View {
         NavigationView {
@@ -36,14 +34,14 @@ struct PaintCanvasView: View {
                 .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged({ value in
                         let newPoint = value.location
-                    
+
                         if value.translation.width + value.translation.height == 0 {
                             lines.append(PaintLine(points: [newPoint], color: selectedColor, lineWidth: selectedLineWidth))
                         } else {
                             let index = lines.count - 1
                             lines[index].points.append(newPoint)
                         }
-                    
+
                     })
                     .onEnded({ value in
                         if let last = lines.last?.points, last.isEmpty {
@@ -51,7 +49,7 @@ struct PaintCanvasView: View {
                         }
                     })
                 )
-                
+
                 HStack {
                     ColorPicker("Выбор цвета", selection: $selectedColor)
                         .labelsHidden()
@@ -61,9 +59,9 @@ struct PaintCanvasView: View {
                         .frame(maxWidth: 100)
                     Text(String(format: "%.0f", selectedLineWidth))
                         .fontWeight(.medium)
-                    
+
                     Spacer()
-                    
+
                     Button {
                         let last = lines.removeLast()
                         deletedLines.append(last)
@@ -72,7 +70,7 @@ struct PaintCanvasView: View {
                             .imageScale(.large)
                     }
                     .disabled(lines.count == 0)
-                    
+
                     Button {
                         let last = deletedLines.removeLast()
                         lines.append(last)
@@ -81,7 +79,7 @@ struct PaintCanvasView: View {
                             .imageScale(.large)
                     }
                     .disabled(deletedLines.count == 0)
-                    
+
                     Button {
                         clearConfirmationState = true
                     }
@@ -102,7 +100,7 @@ struct PaintCanvasView: View {
                         )
                     }
                 }
-                
+
             }
             .padding()
 
