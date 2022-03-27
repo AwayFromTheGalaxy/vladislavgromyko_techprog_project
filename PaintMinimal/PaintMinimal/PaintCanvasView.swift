@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PhotoCanvas: View {
+struct SaveCanvas: View {
     @Binding var drawingLines: [PaintLine]
 
     @Environment(\.colorScheme) var deviceColorScheme: ColorScheme
@@ -136,7 +136,7 @@ struct PaintCanvasView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Button {
-                    let image = convertViewToUIImage(PhotoCanvas(drawingLines: $lines))
+                    let image = convertViewToUIImage(SaveCanvas(drawingLines: $lines))
                     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     showingAlert = true
                 } label: {
@@ -150,7 +150,7 @@ struct PaintCanvasView: View {
     }
 }
 
-func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
+func convertViewToUIImage(_ canvasView: SaveCanvas) -> UIImage {
     var uiImage = UIImage()
     let controller = UIHostingController(rootView: canvasView)
 
