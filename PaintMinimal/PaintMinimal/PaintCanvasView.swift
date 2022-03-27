@@ -9,12 +9,12 @@ import SwiftUI
 
 struct PhotoCanvas: View {
     @Binding var drawingLines: [PaintLine]
-    
+
     @Environment(\.colorScheme) var deviceColorScheme: ColorScheme
-    
+
     let paintEngine = PaintEngine()
     let screenSize: CGRect = UIScreen.main.bounds
-    
+
     var body: some View {
         if deviceColorScheme == .dark {
             Color.black
@@ -51,7 +51,7 @@ struct PaintCanvasView: View {
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
     @State private var showingAlert = false
-    
+
     let paintEngine = PaintEngine()
 
     var body: some View {
@@ -153,7 +153,7 @@ struct PaintCanvasView: View {
 func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
     var uiImage = UIImage()
     let controller = UIHostingController(rootView: canvasView)
-           
+
     if let view = controller.view {
         let contentSize = view.intrinsicContentSize
         view.bounds = CGRect(origin: .zero, size: contentSize)
