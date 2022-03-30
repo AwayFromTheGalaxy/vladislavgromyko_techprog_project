@@ -135,15 +135,24 @@ struct PaintCanvasView: View {
             .navigationTitle("Paint Minimal")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button {
-                    let image = convertViewToUIImage(SaveCanvas(drawingLines: $lines))
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                    showingAlert = true
+                Menu {
+                    Button {
+                        saveCanvas(SaveCanvas(drawingLines: $lines))
+                        showingAlert = true
+                    } label: {
+                        Label("Сохранить", systemImage: "square.and.arrow.down")
+                    }
+                    .alert(isPresented: $showingAlert) {
+                        Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
+                    }
+                    Button {
+
+                    } label: {
+                        Label("Поделиться", systemImage: "square.and.arrow.up")
+                    }
                 } label: {
-                    Label("Сохранить", systemImage: "square.and.arrow.down")
-                }
-                .alert(isPresented: $showingAlert) {
-                    Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
+                    Image(systemName: "ellipsis.circle")
+                        .imageScale(.large)
                 }
             }
         }
@@ -165,6 +174,15 @@ func convertViewToUIImage(_ canvasView: SaveCanvas) -> UIImage {
         }
     }
     return uiImage
+}
+
+func saveCanvas(_ canvasView: SaveCanvas) {
+    let image = convertViewToUIImage(canvasView)
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+}
+
+func shareCanvas(_ canvasView: SaveCanvas) {
+
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
