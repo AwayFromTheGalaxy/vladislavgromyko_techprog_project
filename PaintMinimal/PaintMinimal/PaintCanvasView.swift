@@ -184,7 +184,14 @@ func saveCanvas(_ canvasView: SaveCanvas) {
 func shareCanvas(_ canvasView: SaveCanvas) {
     let image = convertViewToUIImage(canvasView)
     let av = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-    UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true, completion: nil)
+    UIApplication
+        .shared
+        .connectedScenes
+        .compactMap { $0 as? UIWindowScene }
+        .flatMap { $0.windows }
+        .first { $0.isKeyWindow }?
+        .rootViewController?
+        .present(av, animated: true, completion: nil)
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
