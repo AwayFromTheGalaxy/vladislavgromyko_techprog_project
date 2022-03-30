@@ -146,7 +146,7 @@ struct PaintCanvasView: View {
                         Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
                     }
                     Button {
-
+                        shareCanvas(SaveCanvas(drawingLines: $lines))
                     } label: {
                         Label("Поделиться", systemImage: "square.and.arrow.up")
                     }
@@ -182,7 +182,9 @@ func saveCanvas(_ canvasView: SaveCanvas) {
 }
 
 func shareCanvas(_ canvasView: SaveCanvas) {
-
+    let image = convertViewToUIImage(canvasView)
+    let av = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+    UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true, completion: nil)
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
