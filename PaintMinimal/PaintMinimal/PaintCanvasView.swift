@@ -142,9 +142,6 @@ struct PaintCanvasView: View {
                     } label: {
                         Label("Сохранить", systemImage: "square.and.arrow.down")
                     }
-                    .alert(isPresented: $showingAlert) {
-                        Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
-                    }
                     Button {
                         shareCanvas(SaveCanvas(drawingLines: $lines))
                     } label: {
@@ -153,6 +150,9 @@ struct PaintCanvasView: View {
                 } label: {
                     Image(systemName: "ellipsis.circle")
                         .imageScale(.large)
+                }
+                .alert(isPresented: $showingAlert) {
+                    Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
                 }
             }
         }
