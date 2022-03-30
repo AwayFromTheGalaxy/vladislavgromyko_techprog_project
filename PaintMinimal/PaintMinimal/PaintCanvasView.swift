@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct PhotoCanvas: View {
+struct SaveCanvas: View {
     @Binding var drawingLines: [PaintLine]
-    
+
     @Environment(\.colorScheme) var deviceColorScheme: ColorScheme
-    
+
     let paintEngine = PaintEngine()
     let screenSize: CGRect = UIScreen.main.bounds
-    
+
     var body: some View {
         if deviceColorScheme == .dark {
             Color.black
@@ -51,7 +51,7 @@ struct PaintCanvasView: View {
     @State private var selectedLineWidth: CGFloat = 1
     @State private var clearConfirmationState: Bool = false
     @State private var showingAlert = false
-    
+
     let paintEngine = PaintEngine()
 
     var body: some View {
@@ -135,12 +135,21 @@ struct PaintCanvasView: View {
             .navigationTitle("Paint Minimal")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button {
-                    let image = convertViewToUIImage(PhotoCanvas(drawingLines: $lines))
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                    showingAlert = true
+                Menu {
+                    Button {
+                        saveCanvas(SaveCanvas(drawingLines: $lines))
+                        showingAlert = true
+                    } label: {
+                        Label("Сохранить", systemImage: "square.and.arrow.down")
+                    }
+                    Button {
+                        shareCanvas(SaveCanvas(drawingLines: $lines))
+                    } label: {
+                        Label("Поделиться", systemImage: "square.and.arrow.up")
+                    }
                 } label: {
-                    Label("Сохранить", systemImage: "square.and.arrow.down")
+                    Image(systemName: "ellipsis.circle")
+                        .imageScale(.large)
                 }
                 .alert(isPresented: $showingAlert) {
                     Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
@@ -150,10 +159,10 @@ struct PaintCanvasView: View {
     }
 }
 
-func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
+func convertViewToUIImage(_ canvasView: SaveCanvas) -> UIImage {
     var uiImage = UIImage()
     let controller = UIHostingController(rootView: canvasView)
-           
+
     if let view = controller.view {
         let contentSize = view.intrinsicContentSize
         view.bounds = CGRect(origin: .zero, size: contentSize)
@@ -165,6 +174,24 @@ func convertViewToUIImage(_ canvasView: PhotoCanvas) -> UIImage {
         }
     }
     return uiImage
+}
+
+func saveCanvas(_ canvasView: SaveCanvas) {
+    let image = convertViewToUIImage(canvasView)
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+}
+
+func shareCanvas(_ canvasView: SaveCanvas) {
+    let image = convertViewToUIImage(canvasView)
+    let av = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+    UIApplication
+        .shared
+        .connectedScenes
+        .compactMap { $0 as? UIWindowScene }
+        .flatMap { $0.windows }
+        .first { $0.isKeyWindow }?
+        .rootViewController?
+        .present(av, animated: true, completion: nil)
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
