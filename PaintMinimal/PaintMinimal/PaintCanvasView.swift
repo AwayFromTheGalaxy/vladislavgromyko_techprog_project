@@ -135,12 +135,21 @@ struct PaintCanvasView: View {
             .navigationTitle("Paint Minimal")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button {
-                    let image = convertViewToUIImage(SaveCanvas(drawingLines: $lines))
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                    showingAlert = true
+                Menu {
+                    Button {
+                        saveCanvas(SaveCanvas(drawingLines: $lines))
+                        showingAlert = true
+                    } label: {
+                        Label("Сохранить", systemImage: "square.and.arrow.down")
+                    }
+                    Button {
+                        shareCanvas(SaveCanvas(drawingLines: $lines))
+                    } label: {
+                        Label("Поделиться", systemImage: "square.and.arrow.up")
+                    }
                 } label: {
-                    Label("Сохранить", systemImage: "square.and.arrow.down")
+                    Image(systemName: "ellipsis.circle")
+                        .imageScale(.large)
                 }
                 .alert(isPresented: $showingAlert) {
                     Alert(title: Text("Рисунок успешно сохранен!"), message: Text("Вы можете найти его в вашей галерее"), dismissButton: .default(Text("Понятно")))
@@ -165,6 +174,24 @@ func convertViewToUIImage(_ canvasView: SaveCanvas) -> UIImage {
         }
     }
     return uiImage
+}
+
+func saveCanvas(_ canvasView: SaveCanvas) {
+    let image = convertViewToUIImage(canvasView)
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+}
+
+func shareCanvas(_ canvasView: SaveCanvas) {
+    let image = convertViewToUIImage(canvasView)
+    let av = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+    UIApplication
+        .shared
+        .connectedScenes
+        .compactMap { $0 as? UIWindowScene }
+        .flatMap { $0.windows }
+        .first { $0.isKeyWindow }?
+        .rootViewController?
+        .present(av, animated: true, completion: nil)
 }
 
 struct PaintCanvasView_Previews: PreviewProvider {
